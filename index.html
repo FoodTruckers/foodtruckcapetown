@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Food Truck Cape Town | Find food trucks and book one for your event</title>
+<meta name="description" content="A directory of Cape Town food trucks, coffee carts and event suppliers. Find one near you or book a truck for your event.">
+<style>
+  :root { --bg:#fffaf3; --ink:#1f1a17; --muted:#6b625b; --accent:#e4572e; --card:#ffffff; --line:#eadfd3; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--ink); line-height:1.5; }
+  .wrap { max-width:1000px; margin:0 auto; padding:0 16px; }
+  header { background:var(--ink); color:#fff; padding:56px 0 48px; }
+  header h1 { font-size:clamp(2rem,6vw,3.2rem); margin:0 0 8px; line-height:1.1; }
+  header p { color:#d9cfc6; font-size:1.15rem; margin:0 0 24px; max-width:600px; }
+  .btn { display:inline-block; background:var(--accent); color:#fff; text-decoration:none; padding:12px 20px; border-radius:8px; font-weight:600; margin:0 8px 8px 0; }
+  .btn.ghost { background:transparent; border:2px solid #fff; }
+  section { padding:48px 0; }
+  h2 { font-size:1.8rem; margin:0 0 8px; }
+  .lead { color:var(--muted); margin:0 0 24px; }
+  .filters { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+  .filters input, .filters select { padding:10px 12px; border:1px solid var(--line); border-radius:8px; font-size:1rem; background:#fff; flex:1 1 200px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px; display:flex; flex-direction:column; }
+  .card.featured { border:2px solid var(--accent); }
+  .badge { align-self:flex-start; background:var(--accent); color:#fff; font-size:.75rem; font-weight:700; padding:2px 8px; border-radius:99px; margin-bottom:8px; }
+  .card h3 { margin:0 0 4px; font-size:1.15rem; }
+  .meta { color:var(--muted); font-size:.9rem; margin-bottom:8px; }
+  .card p { margin:0 0 16px; flex:1; }
+  .card a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .alt { background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .two { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; }
+  .box { background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:24px; }
+  .box ul { padding-left:20px; margin:8px 0 20px; }
+  footer { padding:32px 0; color:var(--muted); font-size:.9rem; }
+  .empty { color:var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Cape Town's food trucks, all in one place</h1>
+    <p>Find a food truck, coffee cart or event supplier near you, or book one for your next party, wedding or office day.</p>
+    <a class="btn" href="#book">Book a truck for an event</a>
+    <a class="btn ghost" href="#join">List your business</a>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>The directory</h2>
+    <p class="lead">Click any listing to visit that business.</p>
+    <div class="filters">
+      <input id="q" type="search" placeholder="Search by name or area" aria-label="Search">
+      <select id="type" aria-label="Type"><option value="">All types</option></select>
+    </div>
+    <div id="grid" class="grid"></div>
+  </div>
+</section>
+
+<section class="alt" id="join">
+  <div class="wrap two">
+    <div class="box">
+      <h2>List your business</h2>
+      <p>Food trucks, coffee carts, caterers and event suppliers in Cape Town can be listed here.</p>
+      <ul>
+        <li><strong>Free listing:</strong> your name, area, a short description and a link.</li>
+        <li><strong>Featured listing:</strong> top of the page with a badge, plus event leads sent your way.</li>
+      </ul>
+      <a class="btn" href="mailto:hello@foodtruckcapetown.co.za?subject=Please%20list%20my%20business&body=Business%20name%3A%0AType%20(food%20truck%2C%20coffee%2C%20supplier)%3A%0AArea%3A%0AShort%20description%3A%0AWebsite%20or%20Instagram%20link%3A%0AFree%20or%20featured%3A">Send my details</a>
+    </div>
+    <div class="box" id="book">
+      <h2>Book a truck for your event</h2>
+      <p>Tell us the date, the area and roughly how many guests. We'll match you with trucks that fit.</p>
+      <a class="btn" href="mailto:hello@foodtruckcapetown.co.za?subject=Event%20booking%20enquiry&body=Event%20date%3A%0AArea%3A%0ANumber%20of%20guests%3A%0AType%20of%20food%20you%20want%3A%0AYour%20phone%20number%3A">Send an enquiry</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© <span id="yr"></span> Food Truck Cape Town · foodtruckcapetown.co.za</div>
+</footer>
+
+<script src="listings.js"></script>
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  const grid = document.getElementById('grid'), q = document.getElementById('q'), typeSel = document.getElementById('type');
+  const items = (typeof LISTINGS !== 'undefined' ? LISTINGS : []).slice().sort((a,b) => (b.featured?1:0) - (a.featured?1:0));
+  [...new Set(items.map(i => i.type))].forEach(t => typeSel.add(new Option(t, t)));
+  const esc = s => String(s || '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  function render() {
+    const term = q.value.toLowerCase(), t = typeSel.value;
+    const shown = items.filter(i => (!t || i.type === t) && (i.name + ' ' + i.area + ' ' + i.description).toLowerCase().includes(term));
+    grid.innerHTML = shown.length ? shown.map(i => `
+      <div class="card${i.featured ? ' featured' : ''}">
+        ${i.featured ? '<span class="badge">Featured</span>' : ''}
+        <h3>${esc(i.name)}</h3>
+        <div class="meta">${esc(i.type)} · ${esc(i.area)}</div>
+        <p>${esc(i.description)}</p>
+        <a href="${esc(i.link)}" target="_blank" rel="noopener">Visit →</a>
+      </div>`).join('') : '<p class="empty">Nothing matches yet.</p>';
+  }
+  q.addEventListener('input', render); typeSel.addEventListener('change', render); render();
+</script>
+</body>
+</html>
